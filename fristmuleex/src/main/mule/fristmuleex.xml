@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="cd843501-e2ce-4f34-a8a0-1547c6ff2b65" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="fristmuleexFlow" doc:id="ce97a8a9-4388-485e-a4ee-4570fce3ef80" >
+		<http:listener doc:name="Listener" doc:id="06b16387-1598-41d5-b108-792916c183f3" config-ref="HTTP_Listener_config" path="/test"/>
+		<logger level="INFO" doc:name="Logger" doc:id="52e274c1-a9f2-45c3-aa12-96fd7ad8de95" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="34cedec4-a741-42d4-88ec-b226ed9aa1e5">
+			<ee:message>
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var myfuction = read("<car><name>honda</name></car>","application/xml")
+output application/json
+---
+
+readUrl("classpath://myjson.json","application/json")
+
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="06b23a12-791b-4100-a568-72abba65dab8" message="#[payload]"/>
+	</flow>
+</mule>
